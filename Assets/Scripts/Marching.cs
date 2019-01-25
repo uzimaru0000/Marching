@@ -12,8 +12,8 @@ namespace Marching {
         Vector2 size;
 
         public float threshold = 0.5f;
-        
-        public Vector2[] vertexies;
+
+        public Vector2 up, down, right, left;
 
         public bool StateA {
             get {
@@ -50,22 +50,22 @@ namespace Marching {
 
         public Vector2 PosA {
             get {
-                return center + Vector2.Scale(size, new Vector2(-0.5f, 0.5f));
+                return center + Vector2.Scale(size, new Vector2(0.5f, 0.5f));
             }
         }
         public Vector2 PosB {
             get {
-                return center + Vector2.Scale(size, new Vector2(0.5f, 0.5f));
+                return center + Vector2.Scale(size, new Vector2(-0.5f, 0.5f));
             }
         }
         public Vector2 PosC {
             get {
-                return center + Vector2.Scale(size, new Vector2(0.5f, -0.5f));
+                return center + Vector2.Scale(size, new Vector2(-0.5f, -0.5f));
             }
         }
         public Vector2 PosD {
             get {
-                return center + Vector2.Scale(size, new Vector2(-0.5f, -0.5f));
+                return center + Vector2.Scale(size, new Vector2(0.5f, -0.5f));
             }
         }
         
@@ -87,10 +87,10 @@ namespace Marching {
             var edge3 = e3 ? new Edge(PosC, PosD, C, D) : null;
             var edge4 = e4 ? new Edge(PosD, PosA, D, A) : null;
 
-            vertexies = new Edge[] {edge1, edge2, edge3, edge4}
-                            .Where(x => x != null)
-                            .Select(x => x.GetVertex(threshold))
-                            .ToArray();
+            up = edge1 != null ? (Vector2) edge1.GetVertex(threshold) : Vector2.Lerp(PosA, PosB, 0.5f);
+            right = edge2 != null ? (Vector2) edge2.GetVertex(threshold) : Vector2.Lerp(PosB, PosC, 0.5f);
+            down = edge3 != null ? (Vector2) edge3.GetVertex(threshold) : Vector2.Lerp(PosC, PosD, 0.5f);
+            left = edge4 != null ? (Vector2) edge4.GetVertex(threshold) : Vector2.Lerp(PosD, PosA, 0.5f);
         }
         
         bool IsActive(float n) {
@@ -100,22 +100,22 @@ namespace Marching {
 
     public class Edge {
         
-        Vector2 vert1, vert2;
+        Vector3 vert1, vert2;
         float weightA;
         float weightB;
 
-        public Edge(Vector2 a, Vector2 b, float weightA, float weightB) {
+        public Edge(Vector3 a, Vector3 b, float weightA, float weightB) {
             vert1 = a;
             vert2 = b;
             this.weightA = weightA;
             this.weightB = weightB;
         }
 
-        public Vector2 GetVertex(float threshold) {
+        public Vector3 GetVertex(float threshold) {
             if (weightA > weightB) {
-                return Vector2.Lerp(vert2, vert1, weightA - weightB);
+                return Vector3.Lerp(vert2, vert1, (weightA - weightB) * 0.9f);
             } else {
-                return Vector2.Lerp(vert1, vert2, weightB - weightA);
+                return Vector3.Lerp(vert1, vert2, (weightB - weightA) * 0.9f);
             }
         } 
 

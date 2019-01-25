@@ -32,11 +32,8 @@ public class SquareExample : MonoBehaviour {
 		Gizmos.DrawCube(square.PosC, Vector3.one * 0.1f);
 		Gizmos.DrawCube(square.PosD, Vector3.one * 0.1f);
 
-		Gizmos.color = Color.red;
-		square.vertexies.ToList().ForEach(x => Gizmos.DrawCube(x, Vector3.one * 0.1f));
-
 		Gizmos.color = Color.magenta;
-		Gizmos.DrawMesh(MeshGenerator.Generate(square));
-		Gizmos.DrawWireMesh(MeshGenerator.Generate(square));
+		Gizmos.DrawMesh(MeshGenerator.SquareGenerate(square));
+		Gizmos.DrawWireMesh(MeshGenerator.SquareGenerate(square));
 	}
 }
