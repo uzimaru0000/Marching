@@ -168,6 +168,23 @@ namespace Marching {
 			return mesh;
 		}
 
+		public static Mesh ConcatMesh(Mesh a, Mesh b) {
+			if (b == null) return a;
+			var vert = new List<Vector3>(a.vertices);
+			var indices = new List<int>(a.GetIndices(0));
+
+			vert.AddRange(b.vertices);
+			indices.AddRange(b.GetIndices(0).Select(x => x + a.vertexCount));
+
+			var mesh = new Mesh();
+			mesh.SetVertices(vert);
+			mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
+			mesh.RecalculateNormals();
+			mesh.RecalculateBounds();
+
+			return mesh;
+		}
+
 	}
 
 }

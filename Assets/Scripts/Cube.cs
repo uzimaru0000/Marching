@@ -28,11 +28,11 @@ namespace Marching {
 
 		public Mesh Mesh {
 			get {
-				var mesh = ConcatMesh(new Mesh(), MeshGenerator.TetrahedronGenerator(a));
-				mesh = ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(b));
-				mesh = ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(c));
-				mesh = ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(d));
-				mesh = ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(e));
+				var mesh = MeshGenerator.ConcatMesh(new Mesh(), MeshGenerator.TetrahedronGenerator(a));
+				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(b));
+				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(c));
+				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(d));
+				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(e));
 
 				return mesh;
 			}
@@ -59,23 +59,6 @@ namespace Marching {
 				this.d = new Tetrahedron(Verts["D"], Verts["H"], Verts["B"], Verts["F"], d, h, b, f);
 				this.e = new Tetrahedron(Verts["E"], Verts["D"], Verts["F"], Verts["H"], e, d, f, h);
 			}
-		}
-
-		public Mesh ConcatMesh(Mesh a, Mesh b) {
-			if (b == null) return a;
-			var vert = new List<Vector3>(a.vertices);
-			var indices = new List<int>(a.GetIndices(0));
-
-			vert.AddRange(b.vertices);
-			indices.AddRange(b.GetIndices(0).Select(x => x + a.vertexCount));
-
-			var mesh = new Mesh();
-			mesh.SetVertices(vert);
-			mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
-			mesh.RecalculateNormals();
-			mesh.RecalculateBounds();
-
-			return mesh;
 		}
 
 	}
