@@ -89,7 +89,7 @@ namespace Marching {
 			return GenerateHelper(vertices, indices);
 		}
 
-		public static Mesh TetrahedronGenerator(Tetrahedron tetra) {
+		public static Mesh GenerateMesh(this Tetrahedron tetra) {
 			Vector3[] vertices = new Vector3[0];
 			int[] indices = new int[0];
 
@@ -168,7 +168,7 @@ namespace Marching {
 			return mesh;
 		}
 
-		public static Mesh ConcatMesh(Mesh a, Mesh b) {
+		public static Mesh ConcatMesh(this Mesh a, Mesh b) {
 			if (b == null) return a;
 			var vert = new List<Vector3>(a.vertices);
 			var indices = new List<int>(a.GetIndices(0));
@@ -179,8 +179,6 @@ namespace Marching {
 			var mesh = new Mesh();
 			mesh.SetVertices(vert);
 			mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0);
-			mesh.RecalculateNormals();
-			mesh.RecalculateBounds();
 
 			return mesh;
 		}

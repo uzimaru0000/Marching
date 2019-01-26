@@ -23,9 +23,6 @@ public class CubeExample : MonoBehaviour {
 	[SerializeField, Range(0, 1)]
 	float h;
 
-	[SerializeField]
-	bool odd;
-
 	MeshFilter mf;
 	Cube cube;
 
@@ -37,8 +34,8 @@ public class CubeExample : MonoBehaviour {
 	}
 
 	void Start () {
-		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h, odd);
-		MeshFilter.mesh = cube.Mesh;
+		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h);
+		MeshFilter.mesh = cube.mesh;
 	}
 	
 	void Update () {
@@ -46,7 +43,7 @@ public class CubeExample : MonoBehaviour {
 	}
 
 	void OnDrawGizmos() {
-		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h, odd);
+		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h);
 		cube.Verts.Values.ToList().ForEach(x => Gizmos.DrawCube(x + transform.position, Vector3.one * 0.1f));
 
 		Gizmos.color = Color.magenta;
@@ -66,11 +63,7 @@ public class CubeExample : MonoBehaviour {
 		Gizmos.color = Color.red;
 		Gizmos.DrawCube(cube.Verts["H"] + transform.position, Vector3.one * h * 0.1f);
 
-		// Gizmos.color = Color.gray;
-		// Gizmos.DrawMesh(cube.Mesh, transform.position, Quaternion.identity);
-		MeshFilter.mesh = cube.Mesh;
+		MeshFilter.mesh = cube.mesh;
 	}
 
-	void OnDrawGizmosSelected() {
-	}
 }

@@ -13,45 +13,37 @@ public class MarchingExample : MonoBehaviour {
 
 	[SerializeField]
 	float scale;
+	[SerializeField]
+	ComputeShader computeShader;
 
 	MeshFilter meshFilter;
 
-	float[,,] map;
+	float[] map;
 
 	void Start () {
 		meshFilter = GetComponent<MeshFilter>();
-		map = new float[size.x, size.y, size.z];
-		for (var x = 0; x < size.x; x++) {
-			for (var y = 0; y < size.y; y++) {
-				for (var z = 0; z < size.z; z++) {
-					map[x, y, z] = PerlineNoise3D(new Vector3(x, y, z) / scale);
-				}
-			}
-		}
+		var buffer = new ComputeBuffer(size.x * size.y * size.z, sizeof(float), ComputeBufferType.Default);
+		computeShader.SetBuffer(0, "map", buffer);
+		computeShader.SetInt("width", size.x);
+		computeShader.SetInt("height", size.y);
+		computeShader.SetInt("depth", size.z);
+		computeShader.SetFloat("scale", scale);
+		computeShader.Dispatch(0, size.x / 4, size.y / 4, size.z / 4);
 
-		var generator = new Marching.MapGenerator(map, Vector3.one);
+		map = new float[size.x * size.y * size.z];
+		buffer.GetData(map);
+		
+		var time = System.DateTime.Now;
+
+		var generator = new Marching.MapGenerator(map, size, Vector3.one);
 		meshFilter.mesh = generator.GenerateMesh();
-	} 
 
-	float PerlineNoise3D(Vector3 seed) {
-		float AB = Mathf.PerlinNoise(seed.x, seed.y);
-		float BC = Mathf.PerlinNoise(seed.y, seed.z);
-		float AC = Mathf.PerlinNoise(seed.x, seed.z);
+		print((System.DateTime.Now - time).TotalMilliseconds);
 
-		float BA = Mathf.PerlinNoise(seed.y, seed.x);
-		float CB = Mathf.PerlinNoise(seed.z, seed.y);
-		float CA = Mathf.PerlinNoise(seed.z, seed.x);
-
-		return (AB + BC + AC + BA + CB + CA) / 6.0f;
+		buffer.Release();
 	}
 
 	void OnDrawGizmos() {
-		// for (var x = 0; x < size.x; x++) {
-		// 	for (var y = 0; y < size.y; y++) {
-		// 		for (var z = 0; z < size.z; z++) {
-					
-		// 		}
-		// 	}
-		// }
+		
 	}
 }

@@ -144,6 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: {x: 15, y: 15, z: 15}
   scale: 10
+  computeShader: {fileID: 7200000, guid: 4cf1495a6d30449ed8b5ebcb396269a2, type: 3}
 --- !u!4 &146521912
 Transform:
   m_ObjectHideFlags: 0

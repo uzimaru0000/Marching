@@ -9,40 +9,9 @@ namespace Marching {
 		Vector3 A, B, C, D;
 		float a, b, c, d;
 		
-		public Edge ab, bc, cd, ac, ad, bd;
+		public Vector3 AB, BC, CD, AC, AD, BD;
 
 		public float threshold = 0.5f;
-
-		public Vector3 AB {
-			get {
-				return ab.GetVertex(threshold);
-			}
-		}
-		public Vector3 AC {
-			get {
-				return ac.GetVertex(threshold);
-			}
-		}
-		public Vector3 AD {
-			get {
-				return ad.GetVertex(threshold);
-			}
-		}
-		public Vector3 BC {
-			get {
-				return bc.GetVertex(threshold);
-			}
-		}
-		public Vector3 BD {
-			get {
-				return bd.GetVertex(threshold);
-			}
-		}
-		public Vector3 CD {
-			get {
-				return cd.GetVertex(threshold);
-			}
-		}
 
 		public Vector3[] Verticis {
 			get {
@@ -66,12 +35,12 @@ namespace Marching {
 			this.c = c;
 			this.d = d;
 
-			ab = new Edge(A, B, a, b);
-			ac = new Edge(A, C, a, c);
-			ad = new Edge(A, D, a, d);
-			bc = new Edge(B, C, b, c);
-			bd = new Edge(B, D, b, d);
-			cd = new Edge(C, D, c, d);
+			AB = new Edge(A, B, a, b).GetVertex(threshold);
+			AC = new Edge(A, C, a, c).GetVertex(threshold);
+			AD = new Edge(A, D, a, d).GetVertex(threshold);
+			BC = new Edge(B, C, b, c).GetVertex(threshold);
+			BD = new Edge(B, D, b, d).GetVertex(threshold);
+			CD = new Edge(C, D, c, d).GetVertex(threshold);
 		}
 
 		bool IsActive(float n) {
