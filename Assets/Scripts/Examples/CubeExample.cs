@@ -37,7 +37,8 @@ public class CubeExample : MonoBehaviour {
 	}
 
 	void Start () {
-		
+		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h, odd);
+		MeshFilter.mesh = cube.Mesh;
 	}
 	
 	void Update () {
@@ -45,29 +46,31 @@ public class CubeExample : MonoBehaviour {
 	}
 
 	void OnDrawGizmos() {
-		if (cube == null) return;
-		cube.Verts.Values.ToList().ForEach(x => Gizmos.DrawCube(x, Vector3.one * 0.1f));
+		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h, odd);
+		cube.Verts.Values.ToList().ForEach(x => Gizmos.DrawCube(x + transform.position, Vector3.one * 0.1f));
 
 		Gizmos.color = Color.magenta;
-		Gizmos.DrawCube(cube.Verts["A"], Vector3.one * a * 0.1f);
+		Gizmos.DrawCube(cube.Verts["A"] + transform.position, Vector3.one * a * 0.1f);
 		Gizmos.color = Color.green;
-		Gizmos.DrawCube(cube.Verts["B"], Vector3.one * b * 0.1f);
+		Gizmos.DrawCube(cube.Verts["B"] + transform.position, Vector3.one * b * 0.1f);
 		Gizmos.color = Color.blue;
-		Gizmos.DrawCube(cube.Verts["C"], Vector3.one * c * 0.1f);
+		Gizmos.DrawCube(cube.Verts["C"] + transform.position, Vector3.one * c * 0.1f);
 		Gizmos.color = Color.red;
-		Gizmos.DrawCube(cube.Verts["D"], Vector3.one * d * 0.1f);
+		Gizmos.DrawCube(cube.Verts["D"] + transform.position, Vector3.one * d * 0.1f);
 		Gizmos.color = Color.magenta;
-		Gizmos.DrawCube(cube.Verts["E"], Vector3.one * e * 0.1f);
+		Gizmos.DrawCube(cube.Verts["E"] + transform.position, Vector3.one * e * 0.1f);
 		Gizmos.color = Color.green;
-		Gizmos.DrawCube(cube.Verts["F"], Vector3.one * f * 0.1f);
+		Gizmos.DrawCube(cube.Verts["F"] + transform.position, Vector3.one * f * 0.1f);
 		Gizmos.color = Color.blue;
-		Gizmos.DrawCube(cube.Verts["G"], Vector3.one * g * 0.1f);
+		Gizmos.DrawCube(cube.Verts["G"] + transform.position, Vector3.one * g * 0.1f);
 		Gizmos.color = Color.red;
-		Gizmos.DrawCube(cube.Verts["H"], Vector3.one * h * 0.1f);
+		Gizmos.DrawCube(cube.Verts["H"] + transform.position, Vector3.one * h * 0.1f);
+
+		// Gizmos.color = Color.gray;
+		// Gizmos.DrawMesh(cube.Mesh, transform.position, Quaternion.identity);
+		MeshFilter.mesh = cube.Mesh;
 	}
 
 	void OnDrawGizmosSelected() {
-		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h, odd);
-		mf.mesh = cube.Mesh;
 	}
 }

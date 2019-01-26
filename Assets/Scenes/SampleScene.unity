@@ -121,9 +121,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 146521912}
-  - component: {fileID: 146521911}
   - component: {fileID: 146521914}
   - component: {fileID: 146521913}
+  - component: {fileID: 146521911}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -139,18 +139,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 146521910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd5ddc52be55a4eaabcb819ce0a6b85c, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fb86eb34ea27480ba8d369fdf82b7a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a: 0
-  b: 0
-  c: 0
-  d: 0
-  e: 0
-  f: 0
-  g: 0
-  h: 0
-  odd: 1
+  size: {x: 15, y: 15, z: 15}
+  scale: 10
 --- !u!4 &146521912
 Transform:
   m_ObjectHideFlags: 0

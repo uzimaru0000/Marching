@@ -9,32 +9,27 @@ namespace Marching {
 		Vector3 center;
 		Vector3 size;
 
-		public Tetrahedron a, b, c, d, e;
+		public Tetrahedron[] tetrahedrons;
 
 		public Dictionary<string, Vector3> Verts {
 			get {
 				return new Dictionary<string, Vector3>() {
-					{ "A", center + Vector3.Scale(size, new Vector3(0.5f, 0.5f, 0.5f)) },
-					{ "B", center + Vector3.Scale(size, new Vector3(-0.5f, 0.5f, 0.5f)) },
-					{ "C", center + Vector3.Scale(size, new Vector3(-0.5f, -0.5f, 0.5f)) },
-					{ "D", center + Vector3.Scale(size, new Vector3(0.5f, -0.5f, 0.5f)) },
-					{ "E", center + Vector3.Scale(size, new Vector3(0.5f, -0.5f, -0.5f)) },
-					{ "F", center + Vector3.Scale(size, new Vector3(-0.5f, -0.5f, -0.5f)) },
-					{ "G", center + Vector3.Scale(size, new Vector3(-0.5f, 0.5f, -0.5f)) },
-					{ "H", center + Vector3.Scale(size, new Vector3(0.5f, 0.5f, -0.5f)) }
+					{ "A", center + Vector3.Scale(size, new Vector3(-0.5f, 0.5f, -0.5f)) },
+					{ "B", center + Vector3.Scale(size, new Vector3(0.5f, 0.5f, -0.5f)) },
+					{ "C", center + Vector3.Scale(size, new Vector3(0.5f, -0.5f, -0.5f)) },
+					{ "D", center + Vector3.Scale(size, new Vector3(-0.5f, -0.5f, -0.5f)) },
+					{ "E", center + Vector3.Scale(size, new Vector3(-0.5f, -0.5f, 0.5f)) },
+					{ "F", center + Vector3.Scale(size, new Vector3(0.5f, -0.5f, 0.5f)) },
+					{ "G", center + Vector3.Scale(size, new Vector3(0.5f, 0.5f, 0.5f)) },
+					{ "H", center + Vector3.Scale(size, new Vector3(-0.5f, 0.5f, 0.5f)) }
 				};
 			}
 		}
 
 		public Mesh Mesh {
 			get {
-				var mesh = MeshGenerator.ConcatMesh(new Mesh(), MeshGenerator.TetrahedronGenerator(a));
-				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(b));
-				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(c));
-				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(d));
-				mesh = MeshGenerator.ConcatMesh(mesh, MeshGenerator.TetrahedronGenerator(e));
-
-				return mesh;
+				return tetrahedrons.Select(x => MeshGenerator.TetrahedronGenerator(x))
+								   .Aggregate(new Mesh(), (acc, x) => MeshGenerator.ConcatMesh(acc, x));
 			}
 		}
 
@@ -45,20 +40,33 @@ namespace Marching {
 		) {
 			this.center = center;
 			this.size = size;
+
+			tetrahedrons = new [] {
+				new Tetrahedron(Verts["A"], Verts["D"], Verts["C"], Verts["F"], a, d, c, f),
+				new Tetrahedron(Verts["A"], Verts["C"], Verts["B"], Verts["F"], a, c, b, f),
+				new Tetrahedron(Verts["A"], Verts["B"], Verts["G"], Verts["F"], a, b, g, f),
+				new Tetrahedron(Verts["A"], Verts["G"], Verts["H"], Verts["F"], a, g, h, f),
+				new Tetrahedron(Verts["A"], Verts["H"], Verts["E"], Verts["F"], a, h, e, f),
+				new Tetrahedron(Verts["A"], Verts["E"], Verts["D"], Verts["F"], a, e, d, f)
+			};
 			
-			if (odd) {
-				this.a = new Tetrahedron(Verts["A"], Verts["H"], Verts["G"], Verts["E"], a, h, g, e);
-				this.b = new Tetrahedron(Verts["B"], Verts["A"], Verts["G"], Verts["C"], b, a, g, c);
-				this.c = new Tetrahedron(Verts["C"], Verts["E"], Verts["G"], Verts["F"], c, e, g, f);
-				this.d = new Tetrahedron(Verts["D"], Verts["A"], Verts["C"], Verts["E"], d, a, c, e);
-				this.e = new Tetrahedron(Verts["E"], Verts["C"], Verts["G"], Verts["A"], e, c, g, a);
-			} else {
-				this.a = new Tetrahedron(Verts["A"], Verts["D"], Verts["H"], Verts["B"], a, d, h, b);
-				this.b = new Tetrahedron(Verts["B"], Verts["H"], Verts["G"], Verts["F"], b, h, g, f);
-				this.c = new Tetrahedron(Verts["C"], Verts["D"], Verts["B"], Verts["F"], c, d, b, f);
-				this.d = new Tetrahedron(Verts["D"], Verts["H"], Verts["B"], Verts["F"], d, h, b, f);
-				this.e = new Tetrahedron(Verts["E"], Verts["D"], Verts["F"], Verts["H"], e, d, f, h);
-			}
+			// if (odd) {
+			// 	tetrahedrons = new [] {
+			// 		new Tetrahedron(Verts["A"], Verts["C"], Verts["D"], Verts["F"], a, f, c, d),
+			// 		new Tetrahedron(Verts["A"], Verts["B"], Verts["C"], Verts["F"], a, b, c, f),
+			// 		new Tetrahedron(Verts["A"], Verts["G"], Verts["B"], Verts["F"], a, g, b, f),
+			// 		new Tetrahedron(Verts["A"], Verts["H"], Verts["G"], Verts["F"], a, h, g, f),
+			// 		new Tetrahedron(Verts["A"], Verts["D"], Verts["E"], Verts["F"], a, d, e, f)
+			// 	};
+			// } else {
+			// 	tetrahedrons = new [] {
+			// 		new Tetrahedron(Verts["A"], Verts["B"], Verts["H"], Verts["D"], a, b, h, d),
+			// 		new Tetrahedron(Verts["B"], Verts["F"], Verts["G"], Verts["H"], b, f, g, h),
+			// 		new Tetrahedron(Verts["C"], Verts["F"], Verts["B"], Verts["D"], c, f, b, d),
+			// 		new Tetrahedron(Verts["D"], Verts["F"], Verts["B"], Verts["H"], d, f, b, h),
+			// 		new Tetrahedron(Verts["E"], Verts["H"], Verts["F"], Verts["D"], e, h, f, d)
+			// 	};
+			// }
 		}
 
 	}
