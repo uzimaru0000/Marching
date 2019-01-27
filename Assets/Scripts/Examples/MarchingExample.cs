@@ -14,6 +14,9 @@ public class MarchingExample : MonoBehaviour {
 	[SerializeField]
 	float scale;
 	[SerializeField]
+	Vector3 offset;
+
+	[SerializeField]
 	ComputeShader computeShader;
 
 	MeshFilter meshFilter;
@@ -28,10 +31,12 @@ public class MarchingExample : MonoBehaviour {
 		computeShader.SetInt("height", size.y);
 		computeShader.SetInt("depth", size.z);
 		computeShader.SetFloat("scale", scale);
+		computeShader.SetVector("offset", offset);
 		computeShader.Dispatch(0, size.x / 4, size.y / 4, size.z / 4);
 
 		map = new float[size.x * size.y * size.z];
 		buffer.GetData(map);
+		buffer.Release();
 		
 		var time = System.DateTime.Now;
 
@@ -39,8 +44,7 @@ public class MarchingExample : MonoBehaviour {
 		meshFilter.mesh = generator.GenerateMesh();
 
 		print((System.DateTime.Now - time).TotalMilliseconds);
-
-		buffer.Release();
+	
 	}
 
 	void OnDrawGizmos() {

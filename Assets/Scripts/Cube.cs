@@ -9,7 +9,7 @@ namespace Marching {
 		Vector3 center;
 		Vector3 size;
 
-		public Mesh mesh;
+		public MeshData meshData;
 
 		Dictionary<string, Vector3> verts;
 		public Dictionary<string, Vector3> Verts {
@@ -37,14 +37,14 @@ namespace Marching {
 			this.center = center;
 			this.size = size;
 
-			mesh = new [] {
-				new Tetrahedron(Verts["A"], Verts["D"], Verts["C"], Verts["F"], a, d, c, f).GenerateMesh(),
-				new Tetrahedron(Verts["A"], Verts["C"], Verts["B"], Verts["F"], a, c, b, f).GenerateMesh(),
-				new Tetrahedron(Verts["A"], Verts["B"], Verts["G"], Verts["F"], a, b, g, f).GenerateMesh(),
-				new Tetrahedron(Verts["A"], Verts["G"], Verts["H"], Verts["F"], a, g, h, f).GenerateMesh(),
-				new Tetrahedron(Verts["A"], Verts["H"], Verts["E"], Verts["F"], a, h, e, f).GenerateMesh(),
-				new Tetrahedron(Verts["A"], Verts["E"], Verts["D"], Verts["F"], a, e, d, f).GenerateMesh()
-			}.Aggregate(new Mesh(), (acc, x) => acc.ConcatMesh(x));
+			meshData = new [] {
+				new Tetrahedron(Verts["A"], Verts["D"], Verts["C"], Verts["F"], a, d, c, f).GenerateMeshData(),
+				new Tetrahedron(Verts["A"], Verts["C"], Verts["B"], Verts["F"], a, c, b, f).GenerateMeshData(),
+				new Tetrahedron(Verts["A"], Verts["B"], Verts["G"], Verts["F"], a, b, g, f).GenerateMeshData(),
+				new Tetrahedron(Verts["A"], Verts["G"], Verts["H"], Verts["F"], a, g, h, f).GenerateMeshData(),
+				new Tetrahedron(Verts["A"], Verts["H"], Verts["E"], Verts["F"], a, h, e, f).GenerateMeshData(),
+				new Tetrahedron(Verts["A"], Verts["E"], Verts["D"], Verts["F"], a, e, d, f).GenerateMeshData()
+			}.Aggregate((acc, x) => acc == null ? x : acc.ConcatMeshData(x));
 		}
 
 	}

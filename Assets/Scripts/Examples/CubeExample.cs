@@ -35,7 +35,7 @@ public class CubeExample : MonoBehaviour {
 
 	void Start () {
 		cube = new Cube(transform.position, Vector3.one, a, b, c, d, e, f, g, h);
-		MeshFilter.mesh = cube.mesh;
+		MeshFilter.mesh = MeshGenerator.Generate(cube.meshData);
 	}
 	
 	void Update () {
@@ -63,7 +63,7 @@ public class CubeExample : MonoBehaviour {
 		Gizmos.color = Color.red;
 		Gizmos.DrawCube(cube.Verts["H"] + transform.position, Vector3.one * h * 0.1f);
 
-		MeshFilter.mesh = cube.mesh;
+		MeshFilter.mesh = MeshGenerator.Generate(cube.meshData);
 	}
 
 }

@@ -142,8 +142,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fb86eb34ea27480ba8d369fdf82b7a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 15, y: 15, z: 15}
+  size: {x: 16, y: 16, z: 16}
   scale: 10
+  offset: {x: 0, y: 0, z: 0}
   computeShader: {fileID: 7200000, guid: 4cf1495a6d30449ed8b5ebcb396269a2, type: 3}
 --- !u!4 &146521912
 Transform:
