@@ -3,7 +3,7 @@
 ## ※ In development
 
 ## Description
-マーチングキューブ法を使ったボクセルベースのterrain制作ツールです。  
+マーチングキューブ法を使ったボクセルベースのterrain制作ツールです。
   
 ## Progress
 - [x] メッシュを張る
@@ -15,3 +15,5 @@
 - [ ] EditorのGUIを作成
 - [ ] Textureペイントをできるようにする
 - [ ] 保存できるようにする
+
+## Reference
