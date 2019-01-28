@@ -15,6 +15,16 @@ namespace Marching {
 			this.indices = indices;
 		}
 	}
+
+	public struct Tuple<T1, T2> {
+		public T1 first;
+		public T2 second;
+
+		public Tuple(T1 f, T2 s) {
+			first = f;
+			second = s;
+		}
+	}
 	
 	public static class MeshGenerator {
 
@@ -104,6 +114,14 @@ namespace Marching {
 
 		public static MeshData ConcatMeshData(this MeshData a, MeshData b) {
 			if (b == null) return a;
+
+			var allVerts = new List<Vector3>(a.vertices)
+							.Select((x, i) => new Tuple<int, Vector3>(i, x))
+							.Concat(b.vertices.Select((x, i) => new Tuple<int, Vector3>(i, x)))
+							.ToList();
+
+			var u_min = CalcUnitSize(allVerts.Select(x => x.second).ToList(), 3);
+			var octree = CreateOctree(allVerts, u_min);
 			
 			// 結合後の頂点の番号
 			var mappedIndices = Enumerable.Repeat(0, b.vertices.Count).ToList();
@@ -113,9 +131,11 @@ namespace Marching {
 			var count = 0;
 			for (var i = 0; i < b.vertices.Count; i++) {
 				var flag = true;
-				for (var j = 0; j < a.vertices.Count; j++) {
-					if ((a.vertices[j] - b.vertices[i]).sqrMagnitude <= Mathf.Pow(Mathf.Epsilon, 2)) {
-						mappedIndices[i] = j;
+				var index = CalcIndex(u_min.first, b.vertices[i] - u_min.second);
+
+				for (var j = 0; j < octree[index].Count; j++) {
+					if ((octree[index][j].second - b.vertices[i]).sqrMagnitude <= Mathf.Pow(Mathf.Epsilon, 2)) {
+						mappedIndices[i] = octree[index][j].first;
 						flag = false;
 						break;
 					}
@@ -127,10 +147,47 @@ namespace Marching {
 				}
 			}
 
-			a.indices.AddRange(b.indices.Select(x => mappedIndices[x]));
+			Debug.Log(verts.Count);
+
 			a.vertices.AddRange(verts);
+			a.indices.AddRange(b.indices.Select(x => mappedIndices[x]));
 
 			return a;
+		}
+
+		static Tuple<Vector3, Vector3> CalcUnitSize(List<Vector3> pos, int level) {
+			var xs = pos.OrderBy(x => x.x);
+			var ys = pos.OrderBy(x => x.y);
+			var zs = pos.OrderBy(x => x.z);
+
+			var min = new Vector3(xs.First().x, ys.First().y, zs.First().z);
+			var max = new Vector3(xs.Last().x, ys.Last().y, zs.Last().z);
+			var box = max - min;
+
+			return new Tuple<Vector3, Vector3>(box / Mathf.Pow(2, level), min);
+		}
+
+		static Dictionary<int, List<Tuple<int, Vector3>>> CreateOctree(List<Tuple<int, Vector3>> pos, Tuple<Vector3, Vector3> u_min) {
+			var tree = new Dictionary<int, List<Tuple<int, Vector3>>>();
+
+			for (var i = 0; i < pos.Count; i++) {
+				var v = pos[i].second - u_min.second;
+				var index = CalcIndex(u_min.first, v);
+				if (!tree.ContainsKey(index)) tree.Add(index, new List<Tuple<int, Vector3>> { pos[i] });
+				else tree[index].Add(pos[i]);
+			}
+			
+			return tree;
+		}
+
+		static int CalcIndex(Vector3 u, Vector3 p) {
+			System.Func<int, int> shiftNum = n => {
+				var r = (n | n << 8) & 0x00ff00ff;
+				r = (r | r << 4) & 0x0f0f0f0f;
+				return (r | r << 2) & 0x33333333;
+			};
+
+			return shiftNum((int) (p.x / u.x)) | shiftNum((int) (p.y / u.y)) << 1 | shiftNum((int) (p.z / u.z)) << 2;
 		}
 
 	}
